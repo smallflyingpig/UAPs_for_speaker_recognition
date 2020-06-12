@@ -1,0 +1,843 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0030)https://speech2face.github.io/ -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>
+  Universal Adversarial Perturbations Generation for Speaker Recognition
+</title>
+<link href="./main/style.css" rel="stylesheet" type="text/css">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script type="text/javascript">
+LatexIT.add('p',true);
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-65563403-4');
+</script>
+</head>
+<body>
+<div class="container">
+  <p>&nbsp;</p>
+  <!--
+  <p><span class="venue">IEEE Conference on Computer Vision and Pattern Recognition (CVPR) 2019</span></p>
+  -->
+  <p><span class="title">Universal Adversarial Perturbations Generation for Speaker Recognition</span></p>
+  <br>
+  <table border="0" align="center" class="authors">
+    <tbody><tr align="center" valign="bottom">
+    <!--
+      <td><a href="https://ai.google/research/people/InbarMosseri">Inbar Mosseri</a></td>
+      <td><a href="https://billf.mit.edu/">William T. Freeman</a><sup>✝</sup></td>
+      <td><a href="http://people.csail.mit.edu/mrub/">Michael Rubinstein<sup> </sup></a></td>
+      <td><a href="http://people.csail.mit.edu/wojciech">Wojciech Matusik</a><sup>✝</sup></td>
+    -->
+    <td><a href="https://github.com/smallflyingpig">Jiguo Li</a><sup></sup></td>
+    <td><a href="https://scholar.google.com/citations?user=KQB-cKAAAAAJ&hl=zh-CN">Xinfeng Zhang</a><sup></sup></td>
+    <td><a href="http://www.jiachuanmin.site/">Chuanmin Jia</a><sup></sup></td>
+    <td><a href="https://scholar.google.com/citations?user=x4iWZ7wAAAAJ&hl=en">Jizheng Xu</a><sup></sup></td>
+    <td><a href="https://scholar.google.com/citations?user=8G5-2OMAAAAJ&hl=en">Li Zhang</a><sup></sup></td>
+    <td><a href="">Yue Wang</a><sup></sup></td>
+    <td><a href="http://www.idm.pku.edu.cn/Teamcon/index/id/456/aid/2831">Siwei Ma</a><sup>✝</sup></td>
+    <td><a href="http://www.jdl.ac.cn/htm-gaowen/">Wen Gao</a><sup></sup></td>
+    </tr>
+  </tbody></table>
+  <br>
+  <table border="0" align="center" class="affiliations" height="72">
+    <tbody><tr align="center" valign="middle">
+
+  <td align="right" style="padding:0 0px 0 0px;">
+    <a href="http://www.ict.ac.cn/">
+      <img src="./image/cnplogo.jpg"  height="36" alt="">
+    </a>
+    </td>
+    <td align="left" style="padding:0 20px 0 0px;">
+      <a href="http://www.ict.ac.cn/">ICT,CAS</a>
+    </td>
+  <td align="right" style="padding:0 0px 0 0px;"> 
+    <a href="https://www.pku.edu.cn/">
+      <img src="./image/Peking_University.jpg" height="36" alt="">
+    </a>
+    </td>
+    <td align="center" style="padding:0 20px 0 0px;">
+      <sup>✝</sup><a href="https://www.pku.edu.cn/">PKU</a>
+    </td>
+
+    <td align="right" style="padding:0 0px 0 0px;"> 
+        <a href="http://www.ucas.ac.cn/">
+          <img src="./image/UCAS_logo.jpg" height="36" alt="">
+        </a>
+        </td>
+        <td align="center" style="padding:0 20px 0 0px;">
+          <a href="http://www.ucas.ac.cn/">UCAS</a>
+        </td>
+  
+  <td align="right" style="padding:0 0px 0 0px;">
+    <a href="https://bytedance.com/zh">
+      <img src="./image/ByteDance_Logo.jpg"  height="36" alt="">
+    </a>
+    </td>
+    <td align="left" style="padding:0 0px 0 0px;">
+      <a href="https://bytedance.com/zh">Bytedance</a>
+    </td>
+  
+    </tr>
+  </tbody></table>
+  <br>
+  </table>
+
+  <p><span class="section">Abstract</span> </p>
+  <p>
+    Attacking deep learning based biometric systems has drawn more and more attention with the wide deployment of finger-print/face/speaker recognition systems, given the fact that the neural networks are vulnerable to the adversarial examples, which have been intentionally perturbed to remain almost imperceptible for human. In this paper, we demonstrated the existence of the universal adversarial perturbations (UAPs) for the speaker recognition systems. We proposed a generative network to learn the mapping from the low-dimensional normal distribution to the UAPs subspace, then synthesize the UAPs to perturb any input signals to spoof the well-trained speaker recognition model with high probability. Experimental results on TIMIT and LibriSpeech datasets demonstrate the effectiveness of our model.
+    <br>&nbsp;<br>
+  </p>
+  <p><span class="section">Framework</span> </p>
+
+  <table width=90% border="0" align="center">
+      <tbody>
+        <tr>
+          <td class="aligncenter">
+            <img src="./image/UAP_net.jpg" width=100% alt="">
+          </td>
+        </tr>
+        <tr>
+            <td colspan="1" class="caption">
+              <p>
+                Illustration of our framework. We train a generator, which is a multi-layer CNN model, to synthesize universal adversarial perturbations (UAPs) from Gaussian noise. The UAPs are additive noise with a scale factor. The victim model is a state-of-the-art speaker recognition model.
+              <br>
+            </p></td>
+        </tr>
+      </tbody>
+  </table>
+
+
+  <p><span class='section'>Results on the non-targeted attack</span></p>
+  Here we show the results with $\lambda=1500$.
+  <table width=100% border="0" align="center">
+      <tbody>
+          <tr>
+              <td class="aligncenter">
+                The origin speech
+              </td>
+              <td class="aligncenter">
+                  prediction
+                </td>
+              <td class="aligncenter">
+                The adversarial example
+              </td>
+              <td class="aligncenter">
+                  prediction
+                </td>
+                <td class="aligncenter">
+                    ground truth
+                  </td>
+            </tr>
+        <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr1/fcjf0/si1027.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+             fcjf0
+          </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_non_target_phn1/train/dr1/fcjf0/si1027.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+              fsrh0
+           </td>
+           <td class="aligncenter">
+              fcjf0
+           </td>
+        </tr>
+        <tr>
+            <td class="aligncenter">
+             <audio src="./audio/raw_data/train/dr1/fcjf0/si1657.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+                fcjf0
+             </td>
+            <td class="aligncenter">
+              <audio src="./audio/output_non_target_phn1/train/dr1/fcjf0/si1657.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              fsrh0
+             </td>
+             <td class="aligncenter">
+                fcjf0
+             </td>
+        </tr>
+        <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr1/fcjf0/si648.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+              fcjf0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_non_target_phn1/train/dr1/fcjf0/si648.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fsrh0
+           </td>
+           <td class="aligncenter">
+              fcjf0
+           </td>
+        </tr>
+        <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr1/fdaw0/si1271.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fdaw0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_non_target_phn1/train/dr1/fdaw0/si1271.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fsrh0
+           </td>
+           <td class="aligncenter">
+            fdaw0
+           </td>
+        </tr>
+        <tr>
+            <td class="aligncenter">
+             <audio src="./audio/raw_data/train/dr1/fdaw0/si1406.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              fdaw0
+             </td>
+            <td class="aligncenter">
+              <audio src="./audio/output_non_target_phn1/train/dr1/fdaw0/si1406.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              fsrh0
+             </td>
+             <td class="aligncenter">
+              fdaw0
+             </td>
+        </tr>
+        <tr>
+            <td class="aligncenter">
+             <audio src="./audio/raw_data/train/dr1/fdaw0/si2036.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              fdaw0
+             </td>
+            <td class="aligncenter">
+              <audio src="./audio/output_non_target_phn1/train/dr1/fdaw0/si2036.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              fsrh0
+             </td>
+             <td class="aligncenter">
+              fdaw0
+             </td>
+        </tr>
+        <tr>
+            <td class="aligncenter">
+             <audio src="./audio/raw_data/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              faem0
+             </td>
+            <td class="aligncenter">
+              <audio src="./audio/output_non_target_phn1/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              msvs0
+             </td>
+             <td class="aligncenter">
+              faem0
+             </td>
+        </tr>
+        <tr>
+            <td class="aligncenter">
+             <audio src="./audio/raw_data/train/dr2/faem0/si2022.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              faem0
+             </td>
+            <td class="aligncenter">
+              <audio src="./audio/output_non_target_phn1/train/dr2/faem0/si2022.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              msvs0
+             </td>
+             <td class="aligncenter">
+              faem0
+             </td>
+        </tr>
+        <tr>
+            <td class="aligncenter">
+             <audio src="./audio/raw_data/train/dr2/faem0/si762.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              faem0
+             </td>
+            <td class="aligncenter">
+              <audio src="./audio/output_non_target_phn1/train/dr2/faem0/si762.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              msvs0
+             </td>
+             <td class="aligncenter">
+              faem0
+             </td>
+        </tr>
+        <tr>
+            <td class="aligncenter">
+             <audio src="./audio/raw_data/train/dr8/fbcg1/si1612.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              fbcg1
+             </td>
+            <td class="aligncenter">
+              <audio src="./audio/output_non_target_phn1/train/dr8/fbcg1/si1612.ogg" controls="controls" style="width: 250px;"></audio>
+            </td>
+            <td class="aligncenter">
+              fsrh0
+             </td>
+             <td class="aligncenter">
+              fbcg1
+             </td>
+        </tr>
+        <tr>
+            <td colspan="5" class="caption" align="center">
+              <p>
+                Non-targeted attack results on TIMIT dataset</a>.
+              <br>
+            </p></td>
+        </tr>
+      </tbody>
+  </table>
+
+  <p><span class='section'>Results on targeted attack</span></p>
+  <table width=100% border="0" align="center">
+    <tbody>
+      <tr>
+          <td class="aligncenter">
+            The origin speech
+          </td>
+          <td class="aligncenter">
+              prediction
+            </td>
+          <td class="aligncenter">
+            The adversarial example
+          </td>
+          <td class="aligncenter">
+              prediction
+            </td>
+          <td class="aligncenter">
+              attack target
+            </td>
+          <td class="aligncenter">
+              ground truth
+          </td>
+      </tr>
+      <tr>
+        <td class="aligncenter">
+         <audio src="./audio/raw_data/train/dr1/fdaw0/si1271.ogg" controls="controls" style="width: 250px;"></audio>
+        </td>
+        <td class="aligncenter">
+          fdaw0
+         </td>
+        <td class="aligncenter">
+          <audio src="./audio/output_target0/train/dr1/fdaw0/si1271.ogg" controls="controls" style="width: 250px;"></audio>
+        </td>
+        <td class="aligncenter">
+            fcjf0
+         </td>
+         <td class="aligncenter">
+          fcjf0
+       </td>
+         <td class="aligncenter">
+          fdaw0
+         </td>
+      </tr>
+      <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr1/fdaw0/si1406.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fdaw0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_target0/train/dr1/fdaw0/si1406.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+              fcjf0
+           </td>
+           <td class="aligncenter">
+            fcjf0
+           </td>
+           <td class="aligncenter">
+            fdaw0
+           </td>
+      </tr>
+      <tr>
+        <td class="aligncenter">
+         <audio src="./audio/raw_data/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+        </td>
+        <td class="aligncenter">
+          faem0
+         </td>
+        <td class="aligncenter">
+          <audio src="./audio/output_target0/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+        </td>
+        <td class="aligncenter">
+            fcjf0
+         </td>
+         <td class="aligncenter">
+          fcjf0
+       </td>
+         <td class="aligncenter">
+          faem0
+         </td>
+      </tr>
+      <tr>
+        <td class="aligncenter">
+         <audio src="./audio/raw_data/train/dr8/fbcg1/si1612.ogg" controls="controls" style="width: 250px;"></audio>
+        </td>
+        <td class="aligncenter">
+          fbcg1
+         </td>
+        <td class="aligncenter">
+          <audio src="./audio/output_target0/train/dr8/fbcg1/si1612.ogg" controls="controls" style="width: 250px;"></audio>
+        </td>
+        <td class="aligncenter">
+            fcjf0
+         </td>
+         <td class="aligncenter">
+          fcjf0
+         </td>
+         <td class="aligncenter">
+          fbcg1
+         </td>
+      </tr>
+      <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr1/fcjf0/si1027.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fcjf0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_target100/train/dr1/fcjf0/si1027.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            mrjh0
+           </td>
+           <td class="aligncenter">
+            mrjh0
+           </td>
+           <td class="aligncenter">
+            fcjf0
+           </td>
+      </tr>
+      <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            faem0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_target100/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            mrjh0
+          </td>
+          <td class="aligncenter">
+            mrjh0
+         </td>
+           <td class="aligncenter">
+            faem0
+           </td>
+      </tr>
+      <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr1/fcjf0/si1027.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fcjf0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_target200/train/dr1/fcjf0/si1027.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fklc0
+           </td>
+           <td class="aligncenter">
+            fklc0
+           </td>
+           <td class="aligncenter">
+            fcjf0
+           </td>
+      </tr>
+      <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr1/fcjf0/si1657.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fcjf0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_target200/train/dr1/fcjf0/si1657.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            fklc0
+           </td>
+           <td class="aligncenter">
+            fklc0
+           </td>
+           <td class="aligncenter">
+            fcjf0
+           </td>
+      </tr>
+      <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr2/faem0/si2022.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            faem0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_target400/train/dr2/faem0/si2022.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            mfxs0
+           </td>
+           <td class="aligncenter">
+            mfxs0
+           </td>
+           <td class="aligncenter">
+            faem0
+           </td>
+      </tr>
+      <tr>
+          <td class="aligncenter">
+           <audio src="./audio/raw_data/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            faem0
+           </td>
+          <td class="aligncenter">
+            <audio src="./audio/output_target400/train/dr2/faem0/si1392.ogg" controls="controls" style="width: 250px;"></audio>
+          </td>
+          <td class="aligncenter">
+            faem0
+           </td>
+           <td class="aligncenter">
+            mfxs0
+           </td>
+           <td class="aligncenter">
+            faem0
+           </td>
+      </tr>
+      
+      <tr>
+          <td colspan="6" class="caption" align="center">
+            <p>
+              Targeted results on TIMIT dataset</a>.
+            <br>
+          </p></td>
+      </tr>
+    </tbody>
+</table>
+
+<!-- <p class='section'>Scale and Frequency distribution</p>
+<table width=100% border='0' align='center'>
+  <tbody>
+    <tr>
+      <td class='aligncenter'>
+        <img src="./image/scale_dist.jpg", style="height: 250px">
+      </td>
+      <td class='aligncenter'>
+          <img src="./image/x_freq_dist_1.jpg", style="height: 250px">
+        </td>
+    </tr>
+    <tr>
+      <td class="aligncenter">
+        scale distribution
+      </td>
+      <td class="aligncenter">
+        frequency distribution
+      </td>
+    </tr>
+  </tbody>
+</table> -->
+
+  <p class="section">Paper</p>
+  <table border="0">
+    <tbody>
+      <tr>
+        <td height="195"><a href="https://smallflyingpig.github.io/UAPs_net/main"><img src="./image/paper_cover.jpg" alt="" width="175" height="211"></a></td>
+        <td>&nbsp;</td>
+	<td>&nbsp;</td>
+        <td>"Universal Adversarial Perturbations Generation for Speaker Recognition",<br>
+            Jiguo, Li, Xinfeng Zhang, Chuanmin Jia, Jizheng Xu, Li Zhang, Yue Wang, Siwei Ma, Wen Gao<br>
+            <a href="https://arxiv.org/abs/2004.03428"> [Arxiv] </a> <a href="https://ieeexplore.ieee.org/document/9102886"> [IEEE Xplore] </a><br>
+        <p></p></td>
+      </tr>
+    </tbody>
+  </table>
+&nbsp;<br>
+
+  <p><span class='section'>Codes for This Paper</span></p>
+  <p>The codes can be found on <a href="https://github.com/smallflyingpig/universal_adversarial_perturbation_generative_network_for_speaker_recognition">github</a>.</p>
+
+
+  <p class="section">Acknowledgment</p>
+  <table border="0">
+    <tbody>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>The authors would like to thank Jing Lin, Junjie Shi for helpful discussion.
+<br>
+		&nbsp;<br>
+	</td>
+	</tr>
+  </tbody>
+  </table>
+  <p>&nbsp;</p>
+  <p class="section">&nbsp;</p>
+
+  
+  
+
+
+<!--
+  <table width="200" border="0" align="center">
+    <tbody><tr>
+      <td class="caption"><img src="./main/teaser_side.jpg" width="270" alt=""></td>
+      <td class="caption"><table width="75%" border="0" align="right" cellpadding="0">
+        <tbody>
+          <tr>
+            <td width="16%"><img src="./main/0024Daniel_Craig_L1Ltxf1NeL8_0000007.jpg" width="100"></td>
+            <td width="16%"><img src="./main/1044Phyllis_Diller_qoc0k5YwbRI_0000019.jpg" width="100"></td>
+            <td width="16%"><img src="./main/0014Kodi_Smit-McPhee_NUZdfoqhB8o_0000015.jpg" width="100"></td>
+            <td width="16%"><img src="./main/1114Maria_Sharapova_rWaBVelzaFk_0000022.jpg" width="100"></td>
+            <td width="16%"><img src="./main/0022Andre_Braugher_p5AJtU5gclc_0000004.jpg" width="100"></td>
+            <td width="20%"><img src="./main/1111Parineeti_Chopra_2yUgv3B_YcI_0000002.jpg" width="100"></td>
+          </tr>
+          <tr>
+            <td colspan="6" align="center">True face (only for reference)</td>
+          </tr>
+          <tr>
+            <td><audio controls="controls" style="width: 110px;">
+              <source src="images/teaser/wav/0024Daniel_Craig_L1Ltxf1NeL8_0000007.wav" type="audio/wav">
+              Does not support </audio></td>
+            <td><audio controls="controls" style="width: 110px;">
+              <source src="images/teaser/wav/1044Phyllis_Diller_qoc0k5YwbRI_0000019.wav" type="audio/wav">
+              Does not support </audio></td>
+            <td><audio controls="controls" style="width: 110px;">
+              <source src="images/teaser/wav/0014Kodi_Smit-McPhee_NUZdfoqhB8o_0000015.wav" type="audio/wav">
+              Does not support </audio></td>
+            <td><audio controls="controls" style="width: 110px;">
+              <source src="images/teaser/wav/1114Maria_Sharapova_rWaBVelzaFk_0000022.wav" type="audio/wav">
+              Does not support </audio></td>
+            <td><audio controls="controls" style="width: 110px;">
+              <source src="images/teaser/wav/0022Andre_Braugher_p5AJtU5gclc_0000004.wav" type="audio/wav">
+              Does not support </audio></td>
+            <td><audio controls="controls" style="width: 110px;">
+              <source src="images/teaser/wav/1111Parineeti_Chopra_2yUgv3B_YcI_0000002.wav" type="audio/wav">
+              Does not support </audio></td>
+          </tr>
+          <tr>
+            <td colspan="6" align="center">Input waveforms</td>
+          </tr>
+          <tr>
+            <td><img src="./main/0024Daniel_Craig_L1Ltxf1NeL8_0000007(1).jpg" width="100"></td>
+            <td><img src="./main/1044Phyllis_Diller_qoc0k5YwbRI_0000019(1).jpg" width="100"></td>
+            <td><img src="./main/0014Kodi_Smit-McPhee_NUZdfoqhB8o_0000015(1).jpg" width="100"></td>
+            <td><img src="./main/1114Maria_Sharapova_rWaBVelzaFk_0000022(1).jpg" width="100"></td>
+            <td><img src="./main/0022Andre_Braugher_p5AJtU5gclc_0000004(1).jpg" width="100"></td>
+            <td><img src="./main/1111Parineeti_Chopra_2yUgv3B_YcI_0000002(1).jpg" width="100"></td>
+          </tr>
+          <tr>
+            <td colspan="6" align="center">Face reconstructed from speech</td>
+          </tr>
+        </tbody>
+      </table></td>
+    </tr>
+    <tr>
+      <td colspan="2" class="caption"><p>We consider the task of reconstructing an image of a person’s face from a short input audio segment of speech. We show several results of our method on VoxCeleb dataset.<strong> Our model takes only an audio waveform as input </strong>(the true faces are shown just for reference)<strong>.</strong> Note that our goal is not to reconstruct an accurate image of the person, but rather to recover characteristic physical features that are correlated with the input speech. <br>
+        <br>
+        <em>*The three authors  contributed equally to this work.</em><br>
+      </p></td>
+    </tr>
+  </tbody></table>
+	<br>
+  <p><span class="section">Abstract</span> </p>
+  <p>How much can we infer about a person's looks from the way they speak? In this paper, we study the task of reconstructing a facial image of a person from a short audio recording of that person speaking. We design and train a deep neural network to perform this task using millions of natural videos of people speaking from 
+Internet/Youtube. During training, our model learns audiovisual, voice-face correlations that allow it to produce images that capture various physical attributes of the speakers such as age, gender and ethnicity. This is done in a self-supervised manner, by utilizing the natural co-occurrence of faces and speech in Internet videos, without the need to model attributes explicitly. 
+Our reconstructions, obtained directly from audio, reveal the  correlations between faces and voices. We evaluate and numerically quantify how--and in what manner--our Speech2Face reconstructions from audio resemble the true face images of the speakers.<br>
+    &nbsp;<br>
+    
+</p>
+
+
+  <p class="section">Paper</p>
+  <table border="0">
+    <tbody>
+      <tr>
+        <td height="195"><a href="https://arxiv.org/abs/1905.09773"><img src="./main/webthumbnail.jpg" alt="" width="175" height="211"></a></td>
+        <td>&nbsp;</td>
+	<td>&nbsp;</td>
+        <td>"Speech2Face: Learning the Face Behind a Voice",<br>
+            Tae-Hyun Oh, Tali Dekel, Changil Kim, Inbar Mosseri, William T. Freeman, Michael Rubinstein, Wojciech Matusik<br>
+	IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2019<br>
+        <p><a href="https://arxiv.org/abs/1905.09773">[Arxiv]</a></p></td>
+      </tr>
+    </tbody>
+  </table>
+&nbsp;<br>
+  <p class="section">Supplementary Material</p>
+  <table width="283" height="136" border="0">
+    <tbody>
+      <tr>
+        <td width="165"><a href="https://speech2face.github.io/supplemental/index.html"><img src="./main/supp_fig.jpg" alt="" width="207"></a></td>
+        <td width="6">&nbsp;</td>
+        <td width="56"><p>[<a href="https://speech2face.github.io/supplemental/index.html">Link</a>]</p></td>
+      </tr>
+    </tbody>
+  </table>
+&nbsp;<br>
+<p class="section">Ethical Considerations</p>
+  <table border="0">
+    <tbody>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>
+		Although this is a purely academic investigation, we feel that it is important to explicitly discuss in the paper a set of ethical considerations due to the potential sensitivity of facial information.<br>
+		&nbsp;<br>
+	</td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>
+        <td>&nbsp;</td>
+	<td>
+		<strong>Privacy.</strong> As mentioned, our method cannot recover the true identity of a person from their voice (i.e., an exact image of their face). 
+This is because our model is trained to capture visual features (related to age, gender, etc.) that are common to <i>many</i> individuals, and only in cases where there is strong enough evidence to connect those visual features with vocal/speech attributes in the data (see ``voice-face correlations'' below). As such, the model will only produce average-looking faces, with characteristic visual features that are correlated with the input speech. It will not produce images of specific individuals. <br>
+		&nbsp;<br>
+	</td></tr>
+	<tr>
+	<td>&nbsp;</td>
+        <td>&nbsp;</td>
+	<td>
+		<strong>Voice-face correlations and dataset bias.</strong> Our model is designed to reveal statistical correlations that exist between facial features and voices of speakers in the training data. The training data we use is a collection of educational videos from YouTube, and does not represent equally the entire world population. Therefore, the model---as is the case with any machine learning model---is affected by this uneven distribution of data. <br>
+
+		More specifically, if a set of speakers might have vocal-visual traits that are relatively uncommon in the data, then the quality of our reconstructions for such cases may degrade.  For example, if a certain language does not appear in the training data, our reconstructions will not capture well the facial attributes that may be correlated with that language. <br>
+
+		Note that some of the features in our predicted faces may not even be physically connected to speech, for example hair color or style. However, if many speakers in the training set who speak in a similar way (e.g., in the same language) also share some common visual traits (e.g., a common hair color or style), then those visual traits may show up in the predictions. <br>
+ 
+		For the above reasons, we recommend that any further investigation or practical use of this technology will be carefully tested to ensure that the training data is representative of the intended user population. If that is not the case, more representative data should be broadly collected. <br>
+		&nbsp;<br>
+	</td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>
+        <td>&nbsp;</td>
+	<td>
+		<strong>Categories.</strong>
+		In our experimental section, we mention inferred demographic categories such as "White" and "Asian". These are categories defined and used by a commercial face attribute classifier (<a href="https://www.faceplusplus.com/">Face++</a>), and were only used for evaluation in this paper. Our model is not supplied with and does not make use of this information at any stage.<br>
+		&nbsp;<br>
+	</td>
+      </tr>
+    </tbody>
+  </table>
+<p class="section">Further Reading
+</p>
+<table border="0">
+  <tbody>
+    <tr>
+      <td width="6">&nbsp;</td>
+      <td width="6">&nbsp;</td>
+      <td width="977"><p><em>"Seeing voices and hearing faces: Cross-modal biometric matching",  A. Nagrani, S. Albanie, and A. Zisserman, CVPR 2018</em></p>
+	<p><em>"On Learning Associations of Faces and Voices", C. Kim, H. V. Shin, T.-H. Oh, A. Kaspar, M. Elgharib, and W. Matusik, ACCV 2018 </em></p>
+        <p><em>"Wav2Pix: speech-conditioned face generation using generative adversarial networks", A. Duarte, F. Roldan, M. Tubau, J. Escur, S. Pascual, A. Salvador, E. Mohedano, K. McGuinness, J. Torres, and X. Giroi-Nieto, ICASSP 2019 </em></p>
+        <p><em>"Disjoint mapping network for cross-modal matching of voices and faces", Y. Wen, M. A. Ismail, W. Liu, B. Raj, and R. Singh, ICLR 2019</em></p>
+        <p><em>"Putting the face to the voice: Matching identity across modality", M. Kamachi, H. Hill, K. Lander, and E. Vatikiotis-Bateson, Current Biology, 2003        </em><em><br>
+        </em></p></td>
+    </tr>
+  </tbody>
+</table>
+<p class="section">Acknowledgment</p>
+  <table border="0">
+    <tbody>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>
+		The authors would like to thank Suwon
+Shon, James Glass, Forrester Cole and Dilip Krishnan for
+helpful discussion. T.-H. Oh and C. Kim were supported by
+QCRI-CSAIL Computer Science Research Program at MIT.
+<br>
+		&nbsp;<br>
+	</td>
+	</tr>
+  </tbody>
+  </table>
+  <p>&nbsp;</p>
+  <p class="section">&nbsp;</p>
+  -->
+
+
+
+
+  <!--
+  <p class="section">Google Research Blog</p>
+  <table width="1300" border="0">
+    <tbody>
+      <tr>
+        <td width="136"><img src="images/research_blog.png" width="200" height="131" alt=""/></td>
+        <td width="1048"><a href="https://research.googleblog.com/2017/08/making-visible-watermarks-more-effective.html"><img src="images/blog_post.png" width="300" height="166" alt=""/></a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="section">Press</p>
+  <table border="0" cellpadding="10">
+    <tbody>
+      <tr>
+        <td><a href="https://www.theverge.com/2017/8/18/16162108/google-research-algorithm-watermark-removal-photo-protection"><img src="images/the_verge_2016_logo.png" width="200" height="37" alt=""/></a></td>
+        <td><a href="https://petapixel.com/2017/08/18/ai-can-easily-erase-photo-watermarks-heres-protect/"><img src="images/petapixel.png" width="200" height="50" alt=""/></a></td>
+        <td><a href="https://www.engadget.com/2017/08/18/google-flawlessly-remove-stock-photo-watermarks/"><img src="images/engadget.png" width="200" height="44" alt=""/></a></td>
+        <td><a href="https://www.wired.com/story/stock-photo-google-algorithm/"><img src="images/wired-logo.jpg" width="200" height="46" alt=""/></a></td>
+      </tr>
+      <tr>
+        <td><a href="http://www.dailymail.co.uk/sciencetech/article-4803562/Google-AI-easily-erase-watermarks-photos.html"><img src="images/dm_com_29.png" width="210" height="62" alt=""/></a></td>
+        <td><a href="https://thenextweb.com/google/2017/08/18/google-watermark-stock-photo-remove/"><img src="images/the_next_web_logo.jpg" width="190" height="100" alt=""/></a></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="section">&nbsp;</p>
+  <p class="section">&nbsp;</p>
+  <p class="section">&nbsp;</p>
+-->
+  <p class="section">&nbsp;</p>
+</div>
+
+
+</body></html>
